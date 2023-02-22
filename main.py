@@ -4,6 +4,7 @@
 import pytube
 import os
 from pydub import AudioSegment
+from sys import argv
 
 # Variables
 directory = "audio"     # name of the directory where mp3 files will be stored
@@ -34,12 +35,25 @@ def cleanup(mp3, mp4):
     os.replace(mp3, f"{directory}/{mp3}")
 
 
+def search_in_current_directory(prefix):
+    for i in os.listdir():
+        if prefix in i:
+            file_name = i
+            return file_name
+
+
 if __name__ == "__main__":
     if not os.path.exists(directory):
         os.mkdir(directory)
-    link = 'https://www.youtube.com/watch?v=hLu9KghP7Rs&list=LL&index=33'
-    mp4_file = f"{pytube.YouTube(link).title}.mp4"
-    mp3_file = f"{pytube.YouTube(link).title}.mp3"
+
+    # link = 'https://www.youtube.com/watch?v=Yp-GjX8xRfs&list=RDYp-GjX8xRfs&start_radio=1'
+    link = argv[1]
+
     download_yt_video(link)
-    convert_to_mp3(mp4_file)      # name of the downloaded video with .mp4 at the end
+    mp4_file = search_in_current_directory(".mp4")
+
+    convert_to_mp3(mp4_file)
+    mp3_file = search_in_current_directory(".mp3")
     cleanup(mp3_file, mp4_file)
+
+    print("Converting is done!")
