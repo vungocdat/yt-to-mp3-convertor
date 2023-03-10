@@ -15,6 +15,7 @@ def download_yt_video(url):
     """
     Download a YouTube video with the highest resolution
     """
+    print("Downloading video . . .")
     video = pytube.YouTube(url)
     high_quality_video = video.streams.get_highest_resolution()
     high_quality_video.download()
@@ -24,6 +25,7 @@ def convert_to_mp3(filename):
     """
     Convert downloaded video to mp3
     """
+    print("Converting video . . .")
     audio = AudioSegment.from_file(filename)
     audio.export(f"{os.path.splitext(filename)[0]}.mp3", format="mp3")     # take the path of thr file and drop mp4
 
