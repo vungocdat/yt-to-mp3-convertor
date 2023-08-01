@@ -1,6 +1,10 @@
 # Program will take YouTube url (in "") as an argument. Then take the link and download a video from the address.
 # after downloading it will convert the video into mp3 file and clean after the conversion (delete mp4 file)
 # The program is made for macOS and Linux
+
+# if there is some error try to update python library:
+# pip install --upgrade pytub
+
 import sys
 import pytube
 import os
@@ -52,7 +56,7 @@ if __name__ == "__main__":
     if not os.path.exists(directory):
         os.mkdir(directory)
 
-    # link = 'https://www.youtube.com/watch?v=6ZBkDISjv2c&list=LL&index=28'
+    # link = 'https://www.youtube.com/watch?v=DAZVrp4Knlc'
     link = argv[1]
 
     download_yt_video(link)
