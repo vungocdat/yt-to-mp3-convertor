@@ -1,15 +1,10 @@
-# Program will take YouTube url (in "") as an argument. Then take the link and download a video from the address.
-# after downloading it will convert the video into mp3 file and clean after the conversion (delete mp4 file)
-# The program is made for macOS and Linux
+# Program will take YouTube URL address and then download the video.
+# after downloading it will convert the video into mp3 file and clean
+# after the conversion (delete mp4 file)
 
-# if there is some error try to update python library:
-# pip install --upgrade pytub
-
-import sys
-import pytube
+from pytubefix import YouTube
 import os
 from pydub import AudioSegment
-from sys import argv
 
 # Variables
 directory = "audio"     # name of the directory where mp3 files will be stored
@@ -20,9 +15,10 @@ def download_yt_video(url):
     Download a YouTube video with the highest resolution
     """
     print("Downloading video . . .")
-    video = pytube.YouTube(url)
-    high_quality_video = video.streams.get_highest_resolution()
+    yt = YouTube(url)
+    high_quality_video = yt.streams.get_highest_resolution()
     high_quality_video.download()
+    print("Youtube video downloaded.\n")
 
 
 def convert_to_mp3(filename):
@@ -31,18 +27,26 @@ def convert_to_mp3(filename):
     """
     print("Converting video . . .")
     audio = AudioSegment.from_file(filename)
-    audio.export(f"{os.path.splitext(filename)[0]}.mp3", format="mp3")     # take the path of thr file and drop mp4
+    # take the path of thr file and drop mp4
+    audio.export(f"{os.path.splitext(filename)[0]}.mp3", format="mp3")
+    print("Converting finished.\n")
 
 
 def cleanup(mp3, mp4):
     """
     remove mp4 file and move mo3 file to a directory to keep it clean
     """
+    print("Performing cleanup . . .")
     os.remove(mp4)  # cleanup - removes downloaded video to keep just mp3 file
     os.replace(mp3, f"{directory}/{mp3}")
+    print("Cleanup done.\n")
 
 
 def search_in_current_directory(prefix):
+    """
+    Fuction returns the full name of the mp4 file.
+    It was created because some file may have spaces and special characters
+    """
     for i in os.listdir():
         if prefix in i:
             file_name = i
@@ -50,14 +54,11 @@ def search_in_current_directory(prefix):
 
 
 if __name__ == "__main__":
-    if len(argv) < 2:
-        sys.exit("You need to enter YouTube URL address of the video.")
-
+    # if the directory does not exists then create one
     if not os.path.exists(directory):
         os.mkdir(directory)
 
-    # link = 'https://www.youtube.com/watch?v=DAZVrp4Knlc'
-    link = argv[1]
+    link = input("Enter the URL of Youtube video: ")
 
     download_yt_video(link)
     mp4_file = search_in_current_directory(".mp4")
@@ -66,4 +67,4 @@ if __name__ == "__main__":
     mp3_file = search_in_current_directory(".mp3")
     cleanup(mp3_file, mp4_file)
 
-    print("Converting is done!")
+    print("THE PROCESS HAS FINISHED SUCCESSFULLY!")
